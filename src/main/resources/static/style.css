@@ -1,0 +1,52 @@
+:root {
+  --text: #1F2430;
+  --ink: #1D3F8F;
+  --line: #D6DBE4;
+  --soft: #F4F6FA;
+  --yes: #1E7A46;
+  --no: #B42318;
+  --mark: #FFF1A8;
+  --mono: Consolas, "Courier New", monospace;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: #FFFFFF;
+  color: var(--text);
+  font: 16px/1.5 system-ui, "Segoe UI", sans-serif;
+}
+main { max-width: 980px; margin: 0 auto; padding: 24px 16px 48px; }
+h1, h2, h3 { font-family: Georgia, serif; color: var(--ink); font-weight: normal; }
+h1 { font-size: 1.9rem; margin: 0 0 4px; }
+h2 { font-size: 1.35rem; margin: 32px 0 8px; border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+h3 { font-size: 1.1rem; margin: 20px 0 6px; }
+.sub { margin: 0 0 20px; color: #5A6275; }
+.tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--ink); }
+.tabs button { border-radius: 4px 4px 0 0; border-bottom: none; background: var(--soft); color: var(--ink); }
+.tabs button.active { background: var(--ink); color: #FFFFFF; }
+button {
+  font: inherit; padding: 6px 14px; cursor: pointer;
+  border: 1px solid var(--ink); border-radius: 4px; background: #FFFFFF; color: var(--ink);
+}
+button.main { background: var(--ink); color: #FFFFFF; }
+button:disabled { opacity: .45; cursor: default; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 3px solid #8EA9E8; outline-offset: 1px;
+}
+textarea, input[type=text], select {
+  font: 15px var(--mono); padding: 6px 8px; border: 1px solid var(--line); border-radius: 4px; color: var(--text);
+}
+textarea { width: 100%; max-width: 420px; height: 130px; display: block; margin-bottom: 8px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0; }
+pre { font: 14px/1.45 var(--mono); background: var(--soft); border: 1px solid var(--line); padding: 10px; overflow-x: auto; margin: 0; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; font: 14px var(--mono); }
+th, td { border: 1px solid var(--line); padding: 3px 8px; text-align: left; white-space: nowrap; }
+th { background: var(--soft); }
+.verdict { font-size: 1.1rem; font-family: var(--mono); margin: 12px 0; }
+.answer { font: bold 2rem var(--mono); margin: 8px 0; }
+.yes { color: var(--yes); }
+.no, .error { color: var(--no); }
+.mark { background: var(--mark); }
+ol { font: 14px/1.6 var(--mono); padding-left: 3em; }
+.hidden { display: none; }

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lenguajes Formales – Proyecto final</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>Lenguajes Formales – Proyecto final</h1>
+  <p class="sub">FIRST y FOLLOW, analizadores LL(1) y SLR(1), evaluación de un SDD (Aho et al., secciones 4.4–4.6 y 5.1–5.2) y, como extra, las entregas anteriores de autómatas.</p>
+
+  <div class="tabs">
+    <button id="tab-grammar" class="active">Gramática</button>
+    <button id="tab-sdd">SDD</button>
+    <button id="tab-automata">Autómatas</button>
+  </div>
+
+  <section id="page-grammar">
+    <h2>Gramática</h2>
+    <textarea id="grammar" spellcheck="false">3
+S -> [L] n
+L -> SR e
+R -> ,SR e</textarea>
+    <div class="row">
+      <button class="main" id="analyze">Analizar</button>
+      <button id="ex1">Ejemplo 1</button>
+      <button id="ex2">Ejemplo 2</button>
+      <button id="ex3">Ejemplo 3</button>
+    </div>
+    <div id="grammar-error" class="error"></div>
+    <div id="grammar-result" class="hidden">
+      <p class="verdict" id="verdict"></p>
+      <h3>FIRST y FOLLOW</h3>
+      <pre id="sets"></pre>
+      <h3>Tabla LL(1)</h3>
+      <div class="scroll" id="ll1-table"></div>
+      <h3>Autómata LR(0)</h3>
+      <pre id="lr0"></pre>
+      <h3>Tabla SLR(1)</h3>
+      <div class="scroll" id="slr1-table"></div>
+
+      <h2>Análisis de cadenas</h2>
+      <div class="row">
+        <input type="text" id="input" value="[n,[]]" aria-label="Cadena">
+        <select id="parser" aria-label="Analizador">
+          <option value="ll1">LL(1)</option>
+          <option value="slr1">SLR(1)</option>
+        </select>
+        <button class="main" id="parse">Analizar cadena</button>
+      </div>
+      <p class="sub">La cadena vacía se escribe <code>e</code>.</p>
+      <div class="answer" id="answer"></div>
+      <div class="scroll" id="trace"></div>
+    </div>
+  </section>
+
+  <section id="page-sdd" class="hidden">
+    <h2>SDD: número en base variable</h2>
+    <p>Calcula el valor decimal de <code>base#dígitos</code>; por ejemplo, <code>8#17</code> = 15.</p>
+    <div class="scroll">
+      <table>
+        <tr><th>Producción</th><th>Reglas semánticas</th></tr>
+        <tr><td>S → D # N</td><td>N.base = D.val; S.val = N.val</td></tr>
+        <tr><td>N → D R</td><td>R.base = N.base; R.acc = D.val; N.val = R.val</td></tr>
+        <tr><td>R → D R₁</td><td>R₁.base = R.base; R₁.acc = R.acc · R.base + D.val; R.val = R₁.val</td></tr>
+        <tr><td>R → ε</td><td>R.val = R.acc</td></tr>
+        <tr><td>D → k</td><td>D.val = valor del dígito k.lexval (k = 0..9)</td></tr>
+      </table>
+    </div>
+    <div class="row">
+      <input type="text" id="sdd-input" value="8#17" aria-label="Cadena del SDD">
+      <label><input type="checkbox" id="circular"> Variante circular (R.acc = N.val)</label>
+      <button class="main" id="evaluate">Evaluar</button>
+    </div>
+    <div id="sdd-message"></div>
+    <div id="sdd-result" class="hidden">
+      <div class="row">
+        <button id="reset">Reiniciar</button>
+        <button id="step">Paso</button>
+        <button id="all">Todo</button>
+        <span id="step-count"></span>
+      </div>
+      <h3>Árbol anotado</h3>
+      <pre id="sdd-tree"></pre>
+      <h3>Orden de evaluación</h3>
+      <ol id="sdd-order"></ol>
+      <p class="verdict" id="sdd-value"></p>
+    </div>
+  </section>
+
+  <section id="page-automata" class="hidden">
+    <h2>AFN a AFD (construcción de subconjuntos)</h2>
+    <p class="sub">Escriba <code>estados:</code>, <code>alfabeto:</code>, <code>inicial:</code> y <code>finales:</code>; después, una transición por línea: <code>origen símbolo destino</code>. Use <code>ε</code> o <code>eps</code> para las transiciones vacías.</p>
+    <textarea id="nfa" spellcheck="false" style="height: 220px"></textarea>
+    <div class="row">
+      <button class="main" id="convert">Convertir a AFD</button>
+      <button id="nfa1">Ejemplo 1 (con ε)</button>
+      <button id="nfa2">Ejemplo 2 (termina en abb)</button>
+    </div>
+    <div id="nfa-error" class="error"></div>
+    <div id="automata-result" class="hidden">
+      <h3>AFD obtenido</h3>
+      <p class="sub">→ marca el estado inicial, * los finales y ∅ la falta de transición.</p>
+      <div class="scroll" id="dfa-table"></div>
+
+      <h3>Minimización por llenado de tabla</h3>
+      <p class="sub">Cada casilla dice en qué pasada se marcó el par como distinguible (0 si uno es final y el otro no). ≡ indica estados equivalentes.</p>
+      <div class="scroll" id="mark-table"></div>
+      <p id="pairs"></p>
+      <div class="scroll" id="min-table"></div>
+
+      <h3>Simular una cadena</h3>
+      <div class="row">
+        <input type="text" id="sim-input" value="abb" aria-label="Cadena a simular">
+        <select id="sim-which" aria-label="Autómata a simular">
+          <option value="dfa">AFD de subconjuntos</option>
+          <option value="min">AFD minimizado</option>
+        </select>
+        <button class="main" id="simulate">Simular</button>
+      </div>
+      <p class="sub">Deje la cadena vacía para simular la cadena vacía.</p>
+      <div class="answer" id="sim-answer"></div>
+      <pre id="sim-path"></pre>
+    </div>
+
+    <h2>Minimización en el formato del enunciado</h2>
+    <p class="sub">Número de casos y, por cada caso: número de estados, alfabeto, estados finales y una fila de la tabla de transiciones por estado. La salida es una línea de pares equivalentes por caso.</p>
+    <textarea id="batch" spellcheck="false" style="height: 200px">1
+6
+a b
+1 4 5
+0 1 2
+1 3 4
+2 4 3
+3 5 5
+4 5 5
+5 5 5</textarea>
+    <div class="row"><button class="main" id="batch-run">Calcular pares equivalentes</button></div>
+    <div id="batch-error" class="error"></div>
+    <pre id="batch-output"></pre>
+  </section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
